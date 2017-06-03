@@ -201,7 +201,7 @@ static NSString * const kMARKRangeSliderTrackRangeImage = @"rangeSliderTrackRang
         [self sendActionsForControlEvents:UIControlEventValueChanged];
     }
 
-	[self handleTouchUpEventsFor:gesture];
+	[self handleTouchEventsFor:gesture];
 }
 
 - (void)handleRightPan:(UIPanGestureRecognizer *)gesture
@@ -222,7 +222,7 @@ static NSString * const kMARKRangeSliderTrackRangeImage = @"rangeSliderTrackRang
         [self sendActionsForControlEvents:UIControlEventValueChanged];
     }
 
-	[self handleTouchUpEventsFor:gesture];
+	[self handleTouchEventsFor:gesture];
 }
 
 #pragma mark - Getters
@@ -460,9 +460,10 @@ static NSString * const kMARKRangeSliderTrackRangeImage = @"rangeSliderTrackRang
     }
 }
 
-- (void)handleTouchUpEventsFor:(UIPanGestureRecognizer *)gesture
+- (void)handleTouchEventsFor:(UIPanGestureRecognizer *)gesture
 {
 	if (gesture.state == UIGestureRecognizerStateEnded) {
+		[self sendActionsForControlEvents:UIControlEventEditingDidEnd];
 		CGPoint touchLocation = [gesture locationInView:self];
 		CGSize frameSize = self.frame.size;
 
@@ -475,6 +476,10 @@ static NSString * const kMARKRangeSliderTrackRangeImage = @"rangeSliderTrackRang
 		} else {
 			[self sendActionsForControlEvents:UIControlEventTouchUpInside];
 		}
+	}
+
+	if (gesture.state == UIGestureRecognizerStateBegan) {
+		[self sendActionsForControlEvents:UIControlEventEditingDidBegin];
 	}
 }
 
