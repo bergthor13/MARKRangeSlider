@@ -200,6 +200,8 @@ static NSString * const kMARKRangeSliderTrackRangeImage = @"rangeSliderTrackRang
 
         [self sendActionsForControlEvents:UIControlEventValueChanged];
     }
+
+	[self handleTouchUpEventsFor:gesture];
 }
 
 - (void)handleRightPan:(UIPanGestureRecognizer *)gesture
@@ -219,6 +221,8 @@ static NSString * const kMARKRangeSliderTrackRangeImage = @"rangeSliderTrackRang
 
         [self sendActionsForControlEvents:UIControlEventValueChanged];
     }
+
+	[self handleTouchUpEventsFor:gesture];
 }
 
 #pragma mark - Getters
@@ -454,6 +458,24 @@ static NSString * const kMARKRangeSliderTrackRangeImage = @"rangeSliderTrackRang
     if (self.maximumValue - self.minimumValue < self.minimumDistance) {
         self.minimumDistance = 0.0f;
     }
+}
+
+- (void)handleTouchUpEventsFor:(UIPanGestureRecognizer *)gesture
+{
+	if (gesture.state == UIGestureRecognizerStateEnded) {
+		CGPoint touchLocation = [gesture locationInView:self];
+		CGSize frameSize = self.frame.size;
+
+		BOOL touchOutsideBeginning = touchLocation.x < 0 || touchLocation.y < 0;
+		BOOL touchOutsideEnd = touchLocation.x > frameSize.width || touchLocation.y > frameSize.height;
+		BOOL touchIsOutside =  touchOutsideBeginning || touchOutsideEnd;
+
+		if (touchIsOutside) {
+			[self sendActionsForControlEvents:UIControlEventTouchUpOutside];
+		} else {
+			[self sendActionsForControlEvents:UIControlEventTouchUpInside];
+		}
+	}
 }
 
 @end
